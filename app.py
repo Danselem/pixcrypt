@@ -32,6 +32,22 @@ def get_gemini_response(input,image,prompt):
     response = model.generate_content([input,image[0],prompt,],  safety_settings=safety_settings)
     return response.text
 
+def input_image_setup(uploaded_image):
+    # Check if a file has been uploaded
+    if uploaded_image is not None:
+        # Read the file into bytes
+        bytes_data = uploaded_image.getvalue()
+
+        image_parts = [
+            {
+                "mime_type": uploaded_image.type,  # Get the mime type of the uploaded file
+                "data": bytes_data
+            }
+        ]
+        return image_parts
+    else:
+        # raise FileNotFoundError("No file uploaded")
+        st.error("Can't read uploaded image.")
 
 ##initialize our streamlit app
 
@@ -222,10 +238,10 @@ if submit_button:
         #     st.error(f"Error generating threat model: {e}")
     
     elif uploaded_image and not input_text:
-        st.error("Please enter your prompt details before submitting.")
+        st.error("Please enter your prompt details before describing the product.")
     elif input_text and not uploaded_image:
-        st.error("Please upload your product image before submitting.")
+        st.error("Please upload your product image before describing the product.")
     else:
-        st.error("Please upload your product image and prompt details before submitting.")
+        st.error("Please upload your product image and prompt details before describing the product.")
 
 
