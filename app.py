@@ -53,8 +53,8 @@ def input_image_setup(uploaded_image):
 
 st.set_page_config(page_title="PixCrypt App",
                     page_icon=":art:",
-                    layout="wide",
-                    initial_sidebar_state="expanded")
+                    layout="centered",
+                    initial_sidebar_state="auto")
 
 # st.title("PixCrypt App")
     # Custom CSS for gradient background

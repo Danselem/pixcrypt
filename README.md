@@ -1,5 +1,5 @@
-# pixcrypt
-An AI product to support SMEs
+# PixCrypt GPT
+An AI product for describing product images.
 
 
 ### Version 0.1
@@ -20,7 +20,7 @@ An AI product to support SMEs
 2. Change to the cloned repository directory:
 
     ```bash
-    cd PixCrypt-gpt
+    cd pixcrypt
     ```
 
 3. Create a virtual environment
@@ -51,10 +51,6 @@ An AI product to support SMEs
     ```bash
     streamlit run app.py
     ```
-
-2. Open the app in your web browser using the provided URL.
-
-3. Follow the steps in the Streamlit interface to use PixCrypt GPT.
 
 2. Open a web browser and navigate to `http://localhost:8501` to access the app running inside the container.
 
