@@ -1,0 +1,6 @@
+langchain
+google-generativeai
+tqdm
+python-dotenv
+streamlit
+watchdog
