@@ -6,8 +6,7 @@ from pathlib import Path
 import base64
 import google.generativeai as genai
 
-dotenv_path = Path('./.env')
-load_dotenv(dotenv_path=dotenv_path) 
+os.environ['GOOGLE_API_KEY'] = st.secrets['GOOGLE_API_KEY']
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 

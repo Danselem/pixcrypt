@@ -40,7 +40,7 @@ An AI product to support SMEs
     ```bash
     pip install -r requirements.txt
     ```
-    
+
 
 ## Usage
 
@@ -49,7 +49,7 @@ An AI product to support SMEs
 1. Run the Streamlit app:
 
     ```bash
-    streamlit run main.py
+    streamlit run app.py
     ```
 
 2. Open the app in your web browser using the provided URL.
