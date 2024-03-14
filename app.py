@@ -129,6 +129,11 @@ with st.sidebar:
     )
     st.markdown("Created by [Daniel Egbo](https://www.linkedin.com/in/egbodaniel/).")
     # Add "Star on GitHub" link to the sidebar
+    st.sidebar.markdown(
+        "⭐ Star on GitHub: [![Star on GitHub](\
+            https://img.shields.io/github/stars/Danselem/pixcrypt?style=social)](\
+                https://github.com/Danselem/pixcrypt)"
+    )
     
     st.markdown("""---""")
     
