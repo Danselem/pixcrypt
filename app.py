@@ -1,11 +1,15 @@
 #usr/bin/env python
 import streamlit as st
 import os
-from dotenv import load_dotenv
-from pathlib import Path
 import base64
 import google.generativeai as genai
+import comet_llm
+import time
 
+# set up comet
+COMET_API_KEY = st.secrets["COMET_API_KEY"]
+COMET_WORKSPACE = st.secrets["COMET_WORKSPACE"]
+COMET_PROJECT = st.secrets["COMET_PROJECT"]
 os.environ['GOOGLE_API_KEY'] = st.secrets['GOOGLE_API_KEY']
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
@@ -227,17 +231,32 @@ input_prompt = """
             Maintain a professional tone and ensure that your responses are tailored to the specific details present in the image.
             """
 
+
+comet_llm.init(COMET_API_KEY, COMET_WORKSPACE, project=COMET_PROJECT)
+
 ## If ask button is clicked
 
 if submit_button:
     if uploaded_image and input_text:
         # Show a spinner while generating the threat model
         with st.spinner("Reading your product and generating description..."):
+            start = time.time()
             image_data = input_image_setup(uploaded_image)
             response = get_gemini_response(input_prompt, image_data, input_text)
             st.subheader("Hey Buddy \n Here is your product description:")
             # st.write(response)
             st.markdown(response)
+            
+            end = time.time()
+            
+            comet_llm.log_prompt(
+                timestamp = time.time(),
+                prompt=input_text,
+                prompt_template=input_prompt,
+                output=response,
+                tags = ["Gemini", "multi-modal"],
+                duration = round(end - start, 3)
+                )
 
         # except Exception as e:
         #     st.error(f"Error generating threat model: {e}")
