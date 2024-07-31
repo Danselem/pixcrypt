@@ -38,7 +38,7 @@ An AI product for describing product images.
 5. Install the required Python packages:
 
     ```bash
-    pip install -r requirements.txt
+    pip install --upgrade pip && pip install -r requirements.txt
     ```
 
 
@@ -49,7 +49,7 @@ An AI product for describing product images.
 1. Run the Streamlit app:
 
     ```bash
-    streamlit run app.py
+    streamlit run app.py &
     ```
 
 2. Open a web browser and navigate to `http://localhost:8501` to access the app running inside the container.

@@ -1,37 +1,26 @@
-# usr/bin/env python
-# author: Daniel Egbo
-
-############################################
-# Component #1 - Importing Modules
-############################################
+#usr/bin/env python
 import streamlit as st
 import os
+from dotenv import load_dotenv
+from pathlib import Path
 import base64
 import google.generativeai as genai
 import comet_llm
 import time
 
-import warnings
-# Suppress all warnings
-warnings.filterwarnings('ignore')
+dotenv_path = Path('./.env')
+load_dotenv(dotenv_path=dotenv_path)
 
-############################################
-# Component #2 - Loading API Keys
-############################################
 # set up comet
-COMET_API_KEY = st.secrets["COMET_API_KEY"]
-COMET_WORKSPACE = st.secrets["COMET_WORKSPACE"]
-COMET_PROJECT = st.secrets["COMET_PROJECT"]
-os.environ['GOOGLE_API_KEY'] = st.secrets['GOOGLE_API_KEY']
+COMET_API_KEY = os.environ["COMET_API_KEY"]
+COMET_WORKSPACE = os.environ["COMET_WORKSPACE"]
+COMET_PROJECT = os.environ["COMET_PROJECT"]
+os.environ['GOOGLE_API_KEY'] = os.environ['GOOGLE_API_KEY']
 os.environ['GRPC_VERBOSITY'] = 'ERROR'
 
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
-
-############################################
-# Component #3 - Loading Models
-############################################
-## Function to load Gemini model and get respones
+## Function to load OpenAI model and get respones
 
 def get_gemini_response(input,image,prompt):
     safety_settings=[
@@ -50,13 +39,11 @@ def get_gemini_response(input,image,prompt):
     
     model = genai.GenerativeModel('gemini-1.5-flash-latest')
     # model = model.start_chat(history=[])
-    response = model.generate_content([input,image[0],prompt,], stream=True,  safety_settings=safety_settings)
+    response = model.generate_content([input,image[0],prompt,], stream=True, safety_settings=safety_settings)
     return response
 
 def input_image_setup(uploaded_image):
-    """
-    Function to read the image
-    """
+    # Check if a file has been uploaded
     if uploaded_image is not None:
         # Read the file into bytes
         bytes_data = uploaded_image.getvalue()
@@ -71,11 +58,6 @@ def input_image_setup(uploaded_image):
     else:
         # raise FileNotFoundError("No file uploaded")
         st.error("Can't read uploaded image.")
-
-
-############################################
-# Component #4 - Setting Up Streamlit UI
-############################################
 
 ##initialize our streamlit app
 
@@ -121,6 +103,11 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
+
+# Initialize the chat history
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
 # Content centered within half of the page width
 with st.container() as container:
     with st.container() as content:
@@ -130,7 +117,10 @@ with st.container() as container:
             style="color: #feb47b;">Crypt</span> <span style="color: #000000;"> GPT</span> \
                 <i class="fas fa-lock"></i></h1>', unsafe_allow_html=True)
         st.markdown('<p class="subtitle"><span style="color: #EE9A4D;">Your product description App</span> <i class="fas fa-lock"></i></p>', unsafe_allow_html=True)
-        
+        # Display the chat history
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                st.markdown(message["content"])
 
 
 
@@ -139,12 +129,16 @@ st.sidebar.header("About PixCrypt GPT")
 
 with st.sidebar:
     st.markdown(
-        "Welcome to PixCrypt GPT, an AI-powered app designed to help SME's describe their product photos."
+        "Welcome to PixCrypt GPT, an AI-powered app designed to help \
+            small and medium-sized enterprises (SMEs) create compelling \
+                descriptions for their product photos."
     )
     st.markdown(
-        "Small businesses owners struggle with crafting better descriptions for their product images. \
-         PixCrypt GPT aims to help teams and small business owners address the problem. With a single prompt,\
-             our AI can help you produce create beautiful descriptions for you."
+        "Small business owners often struggle to craft effective descriptions\
+            for their product images. PixCrypt GPT aims to help teams \
+                and small business owners overcome this challenge. With \
+                    a single prompt, our AI can assist you in producing \
+                        high-quality descriptions for your products."
     )
     st.markdown("Created by [Daniel Egbo](https://www.linkedin.com/in/egbodaniel/).")
     # Add "Star on GitHub" link to the sidebar
@@ -202,6 +196,7 @@ with st.sidebar:
 st.markdown("""---""")
 
 
+
 uploaded_image = st.file_uploader("Select an image...", 
                                  type=["jpg", "jpeg", "png"], help=r"Click the `Browse files` to upload an image of your choice.")
 image=""   
@@ -216,8 +211,7 @@ if uploaded_image is not None:
             f'<div style="display: flex; justify-content: center;"><img src="data:image/png;base64,{image_data}" alt="Uploaded Image" style="width: 50%; height: auto; max-width: 500px; border-radius: 15%; border: 10px solid #ff7f0e;"></div>', 
             unsafe_allow_html=True
         )
-
-
+        
 # st.header("PixCrypt App")
 # input_text = st.text_area(
 #         label="Provide key terms you want the app to consider \
@@ -229,9 +223,6 @@ if uploaded_image is not None:
 #             relevant information you want the app to include in the result.",
 #     )
 
-############################################
-# Component #5 - LLM Response Generation and Chat
-############################################
 input_text = st.chat_input(placeholder="Enter your prompt details...",
                            key="app_input",
                            ) # on_submit=False
@@ -285,12 +276,12 @@ if input_text:
             for response in get_gemini_response(input_prompt, 
                                             image_data, input_text):
                 full_response += response.text
+                
                 message_placeholder.markdown(full_response + "▌")
         
             message_placeholder.markdown(full_response)
         # st.subheader("Hey Buddy \n Here is your product description:")
         st.session_state.messages.append({"role": "assistant", "content": full_response})
-        
         
         end = time.time()
         
