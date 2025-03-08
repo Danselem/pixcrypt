@@ -2,14 +2,47 @@
 An AI product for describing product images.
 
 
-### Version 0.1
+### Version 0.1.1
 
    Initial release of the application.
 </details>
 
 ## Installation
+### Option 1: Using `uv` and `Makefile`
 
-### Option 1: Cloning the Repository
+To get started with the `Pixcrypt`, follow these steps:
+
+1. Clone the repository:
+```bash
+   git clone https://github.com/Danselem/pixcrypt.git
+   cd nvidia_blueprint/research_assistant
+```
+
+2. Installing **uv**
+
+Use the [link](https://docs.astral.sh/uv/getting-started/installation/) to install `uv` depending on your platform.
+
+>⚠️ **Note:** Ensure you have `make` installed on your PC. If you do not have `make` installed, kindly follow the instructions for [Windows](https://gnuwin32.sourceforge.net/packages/make.htm)
+ and [Linux](https://www.geeksforgeeks.org/how-to-install-make-on-ubuntu/).
+
+3. Install dependencies
+```bash
+    make install-python
+    make install
+```
+
+4. Set up environmental variables
+```bash 
+    make env
+```
+Then fill in the required API keys in the `.env` file in your project directory.
+
+5. Start the app
+```bash
+    make run
+```
+
+### Option 2: Using pip only
 
 1. Clone this repository:
 
@@ -62,4 +95,4 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+[MIT](./LICENSE)
